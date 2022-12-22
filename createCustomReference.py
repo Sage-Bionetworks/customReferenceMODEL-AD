@@ -1,7 +1,5 @@
-import subprocess
-import synapseclient, pandas, os
+import synapseclient, subprocess, os, argparse
 from synapseclient import File
-import argparse
 
 # usage: python3 createCustomReference.py --username *** --password ***
 # probably needs testing outside of experimental testing
