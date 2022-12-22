@@ -96,8 +96,8 @@ for i in range(0, 3):
 
 # upload to Synapse
 
-file = File(path='universal_MODEL_AD_Reference.fa', parent=parentDirectory)
+file = File(path=newReferenceName, parent=parentDirectory)
 file = syn.store(file)
 
-file = File(path='universal_MODEL_AD_Reference.gtf', parent=parentDirectory)
+file = File(path=newGTFName, parent=parentDirectory)
 file = syn.store(file)
