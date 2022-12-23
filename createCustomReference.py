@@ -54,7 +54,7 @@ newGTFName = "universal_MODEL_AD_Reference.gtf"
 def addGenetoReference(geneFasta, geneGTF, chromosome, ref_fasta, ref_GTF):
 
     pre, ext = os.path.splitext(geneFasta)
-    print("Running " + pre + "...")
+    print("Running Gene: " + pre + "...")
 
     # affix to end of chromosome without replacement
     chrom = chromosome
@@ -86,7 +86,7 @@ originalGTFLocation = './references/GCF_000001635.27_GRCm39_genomic.gtf'
 
 # loop through each gene
 
-for i in range(0, 3):
+for i in range(0, len(addedGenes)):
     if(i == 0):
         addGenetoReference(geneFasta=addedGenes[i], geneGTF=addedGTF[i], chromosome=onChromosome[i], ref_fasta=originalReferenceLocation, ref_GTF = originalGTFLocation)
     else:
