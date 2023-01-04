@@ -43,7 +43,7 @@ for x in children:
 # PS1: 14
 
 addedGenes = ['APOE_Human.fa', 'APP_human.fa', 'PS1_human.fa']
-addedGTF = ['APOE_Human.mod.gtf', 'APP_Human.mod.gtf', 'PS1_human.gtf']
+addedGTF = ['APOE_Human.mod.gtf', 'APP_Human.mod.gtf', 'PS1_Human.mod.gtf']
 onChromosome = ['NC_000085.7', 'NC_000077.7', 'NC_000080.7']
 
 # new reference genome name
