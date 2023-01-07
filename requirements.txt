@@ -1,3 +1,4 @@
 synapseclient
 biopython
 argparse
+pandas

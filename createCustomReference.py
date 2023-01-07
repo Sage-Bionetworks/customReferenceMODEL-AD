@@ -1,8 +1,30 @@
 import synapseclient, subprocess, os, argparse
+import pandas as pd
 from synapseclient import File
 
 # usage: python3 createCustomReference.py --username *** --password ***
 # probably needs testing outside of experimental testing
+
+mouseReferenceFasta = 'GCF_000001635.27_GRCm39_genomic.fna'
+mouseReferenceGTF = 'GCF_000001635.27_GRCm39_genomic.gtf'
+
+originalReferenceLocation = './references/' + mouseReferenceFasta
+originalGTFLocation = './references/' + mouseReferenceGTF
+
+# https://www.biostars.org/p/432735/
+# clean gtf file function
+def cleanGTF(gtfFile):
+    # Load the GTF file into a DataFrame
+    df = pd.read_csv(gtfFile, sep="\t", header=None, comment="#")
+
+    # Select rows with non-empty gene_id values
+    df = df.loc[~pd.isnull(df[8])]
+
+    # Reset the index
+    df = df.reset_index(drop=True)
+
+    # Write the resulting DataFrame to a GTF file
+    df.to_csv(gtfFile, sep="\t", header=None, index=False)
 
 parser = argparse.ArgumentParser(description='Create custom reference genome for Model AD')
 
@@ -81,11 +103,10 @@ def addGenetoReference(geneFasta, geneGTF, chromosome, ref_fasta, ref_GTF):
     pre, ext = os.path.splitext(oldReferenceName)
     os.rename(pre + "_reformed.gtf", newGTFName)
 
-originalReferenceLocation = './references/GCF_000001635.27_GRCm39_genomic.fna'
-originalGTFLocation = './references/GCF_000001635.27_GRCm39_genomic.gtf'
+# clean gtf file
+cleanGTF(originalGTFLocation)
 
 # loop through each gene
-
 for i in range(0, len(addedGenes)):
     if(i == 0):
         addGenetoReference(geneFasta=addedGenes[i], geneGTF=addedGTF[i], chromosome=onChromosome[i], ref_fasta=originalReferenceLocation, ref_GTF = originalGTFLocation)
@@ -94,6 +115,14 @@ for i in range(0, len(addedGenes)):
 
 # upload to Synapse
 
+# upload original reference and gtf files with modifications
+file = File(path=originalReferenceLocation, parent=parentDirectory)
+file = syn.store(file)
+
+file = File(path=originalGTFLocation, parent=parentDirectory)
+file = syn.store(file)
+
+# upload new reference and gtf files with modifications
 file = File(path=newReferenceName, parent=parentDirectory)
 file = syn.store(file)
 
