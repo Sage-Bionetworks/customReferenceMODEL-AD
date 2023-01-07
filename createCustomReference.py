@@ -14,6 +14,8 @@ originalGTFLocation = './references/' + mouseReferenceGTF
 # https://www.biostars.org/p/432735/
 # clean gtf file function
 def cleanGTF(gtfFile):
+    print("Removing empty gene_id values from gtf file...")
+
     # Load the GTF file into a DataFrame
     df = pd.read_csv(gtfFile, sep="\t", header=None, comment="#")
 
@@ -115,10 +117,7 @@ for i in range(0, len(addedGenes)):
 
 # upload to Synapse
 
-# upload original reference and gtf files with modifications
-file = File(path=originalReferenceLocation, parent=parentDirectory)
-file = syn.store(file)
-
+# upload original gtf file with modifications
 file = File(path=originalGTFLocation, parent=parentDirectory)
 file = syn.store(file)
 
