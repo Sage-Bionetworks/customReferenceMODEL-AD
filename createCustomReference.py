@@ -1,5 +1,6 @@
 import synapseclient, subprocess, os, argparse
 import pandas as pd
+import csv
 from synapseclient import File
 
 # usage: python3 createCustomReference.py --username *** --password ***
@@ -10,23 +11,6 @@ mouseReferenceGTF = 'GCF_000001635.27_GRCm39_genomic.gtf'
 
 originalReferenceLocation = './references/' + mouseReferenceFasta
 originalGTFLocation = './references/' + mouseReferenceGTF
-
-# https://www.biostars.org/p/432735/
-# clean gtf file function
-def cleanGTF(gtfFile):
-    print("Removing empty gene_id values from gtf file...")
-
-    # Load the GTF file into a DataFrame
-    df = pd.read_csv(gtfFile, sep="\t", header=None, comment="#")
-
-    # Select rows with non-empty gene_id values
-    df = df.loc[~pd.isnull(df[8])]
-
-    # Reset the index
-    df = df.reset_index(drop=True)
-
-    # Write the resulting DataFrame to a GTF file
-    df.to_csv(gtfFile, sep="\t", header=None, index=False)
 
 parser = argparse.ArgumentParser(description='Create custom reference genome for Model AD')
 
@@ -74,6 +58,23 @@ onChromosome = ['NC_000085.7', 'NC_000077.7', 'NC_000080.7']
 newReferenceName = "universal_MODEL_AD_Reference.fa"
 # new gtf file name
 newGTFName = "universal_MODEL_AD_Reference.gtf"
+
+# https://www.biostars.org/p/432735/
+# clean gtf file function
+def cleanGTF(gtfFile):
+    print("Removing empty gene_id values from NCBI gtf file...")
+
+    # Load the GTF file into a DataFrame
+    df = pd.read_csv(gtfFile, sep="\t", header=None, comment="#")
+
+    # Select rows with non-empty gene_id values
+    df = df.loc[~pd.isnull(df[8])]
+
+    # Reset the index
+    df = df.reset_index(drop=True)
+
+    # Write the resulting DataFrame to a GTF file
+    df.to_csv(gtfFile, sep="\t", header=None, index=False, quoting=csv.QUOTE_NONE)
 
 def addGenetoReference(geneFasta, geneGTF, chromosome, ref_fasta, ref_GTF):
 
