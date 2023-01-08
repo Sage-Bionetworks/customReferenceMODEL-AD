@@ -100,10 +100,10 @@ def addGenetoReference(geneFasta, geneGTF, chromosome, ref_fasta, ref_GTF):
 
     # rename output files
     oldReferenceName = os.path.basename(ref_fasta)
-    os.rename(oldReferenceName.rsplit(".", 1) + "_reformed.fa", newReferenceName)
+    os.rename(oldReferenceName.rsplit(".", 1)[0] + "_reformed.fa", newReferenceName)
 
     oldGTFName = os.path.basename(ref_GTF)
-    os.rename(oldGTFName.rsplit(".", 1) + "_reformed.gtf", newGTFName)
+    os.rename(oldGTFName.rsplit(".", 1)[0] + "_reformed.gtf", newGTFName)
 
 # clean gtf file
 #cleanGTF(originalGTFLocation)
