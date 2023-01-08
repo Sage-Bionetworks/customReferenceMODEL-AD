@@ -6,8 +6,8 @@ from synapseclient import File
 # usage: python3 createCustomReference.py --username *** --password ***
 # probably needs testing outside of experimental testing
 
-mouseReferenceFasta = 'GCF_000001635.27_GRCm39_genomic.fna'
-mouseReferenceGTF = 'GCF_000001635.27_GRCm39_genomic.gtf'
+mouseReferenceFasta = 'Mus_musculus.GRCm39.dna.primary_assembly.fa'
+mouseReferenceGTF = 'Mus_musculus.GRCm39.108.gtf'
 
 originalReferenceLocation = './references/' + mouseReferenceFasta
 originalGTFLocation = './references/' + mouseReferenceGTF
@@ -107,7 +107,7 @@ def addGenetoReference(geneFasta, geneGTF, chromosome, ref_fasta, ref_GTF):
     os.rename(pre + "_reformed.gtf", newGTFName)
 
 # clean gtf file
-cleanGTF(originalGTFLocation)
+#cleanGTF(originalGTFLocation)
 
 # loop through each gene
 for i in range(0, len(addedGenes)):
