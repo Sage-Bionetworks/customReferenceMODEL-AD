@@ -1,6 +1,7 @@
 import synapseclient, subprocess, os, argparse
 import pandas as pd
 import csv
+import re
 from synapseclient import File
 
 # usage: python3 createCustomReference.py --username *** --password ***
@@ -99,12 +100,10 @@ def addGenetoReference(geneFasta, geneGTF, chromosome, ref_fasta, ref_GTF):
 
     # rename output files
     oldReferenceName = os.path.basename(ref_fasta)
-    pre, ext = os.path.splitext(oldReferenceName)
-    os.rename(pre + "_reformed.fa", newReferenceName)
+    os.rename(oldReferenceName.rsplit(".", 1) + "_reformed.fa", newReferenceName)
 
     oldGTFName = os.path.basename(ref_GTF)
-    pre, ext = os.path.splitext(oldReferenceName)
-    os.rename(pre + "_reformed.gtf", newGTFName)
+    os.rename(oldGTFName.rsplit(".", 1) + "_reformed.gtf", newGTFName)
 
 # clean gtf file
 #cleanGTF(originalGTFLocation)
