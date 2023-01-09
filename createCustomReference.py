@@ -53,29 +53,12 @@ for x in children:
 
 addedGenes = ['APOE_Human.fa', 'APP_human.fa', 'PS1_human.fa']
 addedGTF = ['APOE_Human.mod.gtf', 'APP_Human.mod.gtf', 'PS1_Human.mod.gtf']
-onChromosome = ['19', '1', '14']
+onChromosome = ['19', '11', '14']
 
 # new reference genome name
 newReferenceName = "universal_MODEL_AD_Reference.fa"
 # new gtf file name
 newGTFName = "universal_MODEL_AD_Reference.gtf"
-
-# https://www.biostars.org/p/432735/
-# clean gtf file function
-def cleanGTF(gtfFile):
-    print("Removing empty gene_id values from NCBI gtf file...")
-
-    # Load the GTF file into a DataFrame
-    df = pd.read_csv(gtfFile, sep="\t", header=None, comment="#")
-
-    # Select rows with non-empty gene_id values
-    df = df.loc[~pd.isnull(df[8])]
-
-    # Reset the index
-    df = df.reset_index(drop=True)
-
-    # Write the resulting DataFrame to a GTF file
-    df.to_csv(gtfFile, sep="\t", header=None, index=False, quoting=csv.QUOTE_NONE)
 
 def addGenetoReference(geneFasta, geneGTF, chromosome, ref_fasta, ref_GTF):
 
@@ -104,9 +87,6 @@ def addGenetoReference(geneFasta, geneGTF, chromosome, ref_fasta, ref_GTF):
 
     oldGTFName = os.path.basename(ref_GTF)
     os.rename(oldGTFName.rsplit(".", 1)[0] + "_reformed.gtf", newGTFName)
-
-# clean gtf file
-#cleanGTF(originalGTFLocation)
 
 # loop through each gene
 for i in range(0, len(addedGenes)):
