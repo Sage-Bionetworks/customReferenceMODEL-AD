@@ -60,16 +60,25 @@ newReferenceName = "universal_MODEL_AD_Reference.fa"
 # new gtf file name
 newGTFName = "universal_MODEL_AD_Reference.gtf"
 
+def assignChromToGeneGTF(geneGTFPath, editedGTF, chromosome):
+    df = pd.read_csv(geneGTF, sep="\t", header=None, comment="#")
+
+    df.iloc[:, 0] = chromosome
+
+    df.to_csv(editedGTF, sep="\t", header=None, index=False, quoting=csv.QUOTE_NONE)
+
 def addGenetoReference(geneFasta, geneGTF, chromosome, ref_fasta, ref_GTF):
 
     pre, ext = os.path.splitext(geneFasta)
     print("Running Gene: " + pre + "...")
 
+    assignChromToGeneGTF(geneGTFPath= "Human_Genes_GTF/" + geneGTF, editedGTF= "Edited_" + geneGTF, chromosome=chromosome)
+
     # affix to end of chromosome without replacement
     chrom = chromosome
     position = '-1'
     in_fasta = geneFasta
-    in_gff = "Human_Genes_GTF/" + geneGTF
+    in_gff = "Edited_" + geneGTF
     ref_fasta = ref_fasta
     ref_gff = ref_GTF
 
