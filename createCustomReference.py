@@ -60,7 +60,7 @@ newReferenceName = "universal_MODEL_AD_Reference.fa"
 # new gtf file name
 newGTFName = "universal_MODEL_AD_Reference.gtf"
 
-def assignChromToGeneGTF(geneGTFPath, editedGTF, chromosome):
+def assignChromToGeneGTF(geneGTF, editedGTF, chromosome):
     df = pd.read_csv(geneGTF, sep="\t", header=None, comment="#")
 
     df.iloc[:, 0] = chromosome
