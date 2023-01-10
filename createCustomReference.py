@@ -52,7 +52,7 @@ for x in children:
 # PS1: 14
 
 addedGenes = ['APOE_Human.fa', 'APP_human.fa', 'PS1_human.fa']
-addedGTF = ['APOE_Human.mod.gtf', 'APP_Human.mod.gtf', 'PS1_Human.mod.gtf']
+addedGTF = ['APOE_Human.gtf', 'APP_Human.gtf', 'PS1_Human.gtf']
 onChromosome = ['19', '11', '14']
 
 # new reference genome name
@@ -72,13 +72,14 @@ def addGenetoReference(geneFasta, geneGTF, chromosome, ref_fasta, ref_GTF):
     pre, ext = os.path.splitext(geneFasta)
     print("Running Gene: " + pre + "...")
 
-    assignChromToGeneGTF(geneGTF= "Human_Genes_GTF/" + geneGTF, editedGTF= "Edited_" + geneGTF, chromosome=chromosome)
+    #assignChromToGeneGTF(geneGTF= "Human_Genes_GTF/" + geneGTF, editedGTF= "Edited_" + geneGTF, chromosome=chromosome)
 
     # affix to end of chromosome without replacement
     chrom = chromosome
     position = '-1'
     in_fasta = geneFasta
-    in_gff = "Edited_" + geneGTF
+    #in_gff = "Edited_" + geneGTF
+    in_gff = geneGTF
     ref_fasta = ref_fasta
     ref_gff = ref_GTF
 
