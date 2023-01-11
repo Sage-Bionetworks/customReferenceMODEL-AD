@@ -78,8 +78,8 @@ def addGenetoReference(geneFasta, geneGTF, chromosome, ref_fasta, ref_GTF):
     chrom = chromosome
     position = '-1'
     in_fasta = geneFasta
-    #in_gff = "Edited_" + geneGTF
-    in_gff = "Human_Genes_GTF/" + geneGTF
+    in_gff = "Edited_" + geneGTF
+    #in_gff = "Human_Genes_GTF/" + geneGTF
     ref_fasta = ref_fasta
     ref_gff = ref_GTF
 
