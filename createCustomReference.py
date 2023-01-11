@@ -72,7 +72,7 @@ def addGenetoReference(geneFasta, geneGTF, chromosome, ref_fasta, ref_GTF):
     pre, ext = os.path.splitext(geneFasta)
     print("Running Gene: " + pre + "...")
 
-    assignChromToGeneGTF(geneGTF= "Human_Genes_GTF/" + geneGTF, editedGTF= "Edited_" + geneGTF, chromosome=chromosome)
+    assignChromToGeneGTF(geneGTF= "./Human_Genes_GTF/" + geneGTF, editedGTF= "Edited_" + geneGTF, chromosome=chromosome)
 
     # affix to end of chromosome without replacement
     chrom = chromosome
