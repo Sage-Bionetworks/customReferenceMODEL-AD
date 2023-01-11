@@ -53,7 +53,7 @@ for x in children:
 
 addedGenes = ['APOE_Human.fa', 'APP_human.fa', 'PS1_human.fa']
 addedGTF = ['APOE_Human.gtf', 'APP_human.gtf', 'PS1_human.gtf']
-onChromosome = ['19', '11', '14']
+onChromosome = ['7', '16', '12']
 
 # new reference genome name
 newReferenceName = "universal_MODEL_AD_Reference.fa"
