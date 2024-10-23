@@ -1,0 +1,5 @@
+gene_symbol,fasta_file,gtf_file,chromosome
+APOE,Human_Genes/APOE_human.fa,Human_Genes/APOE_human.gtf,20
+APP,Human_Genes/APP_human.fa,Human_Genes/APP_human.gtf,21
+MAPT,Human_Genes/MAPT_human.fa,Human_Genes/MAPT_human.gtf,22
+PSEN1,Human_Genes/PSEN1_human.fa,Human_Genes/PSEN1_human.gtf,23
