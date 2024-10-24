@@ -1,3 +1,4 @@
 synapseclient
 argparse
 pandas
+pytest

@@ -37,12 +37,14 @@ MM_BASE_GTF_SYNID = "syn61779397"
 ADDED_GENES_CONFIG_FILE = "added_genes_config.csv"
 DEFAULT_OUTPUT_GENOME_NAME = "universal_MODEL_AD_reference"
 
+# TODO ensure human gene fasta/gtf files end in \n before concatenation
+
 
 def create_custom_reference(args):
     os.makedirs(MM_BASE_REFERENCE_FOLDER, exist_ok=True)
     os.makedirs(EDITED_HUMAN_FILES_LOCATION, exist_ok=True)
 
-    # download mouse genome reference from Synapses
+    # Download mouse genome reference from Synapse
     syn = synapseclient.Synapse()
     syn.login(authToken=args.authToken)
 
@@ -50,22 +52,25 @@ def create_custom_reference(args):
     ref_fasta_gz = syn.get(
         args.base_fasta_synid, downloadLocation=MM_BASE_REFERENCE_FOLDER
     )
-    subprocess.run("gunzip --keep --force " + ref_fasta_gz["path"], shell=True)
+    if ref_fasta_gz["path"].endswith(".gz"):
+        subprocess.run("gunzip --keep --force " + ref_fasta_gz["path"], shell=True)
+        original_reference_location = ref_fasta_gz["path"][:-3]  # Chop off ".gz"
+    else:
+        original_reference_location = ref_fasta_gz["path"]
 
     ref_gtf_gz = syn.get(args.base_gtf_synid, downloadLocation=MM_BASE_REFERENCE_FOLDER)
-    subprocess.run("gunzip --keep --force " + ref_gtf_gz["path"], shell=True)
-
-    original_reference_location = ref_fasta_gz["path"][:-3]  # Chop off ".gz"
-    original_gtf_location = ref_gtf_gz["path"][:-3]  # Chop off ".gz"
+    if ref_gtf_gz["path"].endswith(".gz"):
+        subprocess.run("gunzip --keep --force " + ref_gtf_gz["path"], shell=True)
+        original_gtf_location = ref_gtf_gz["path"][:-3]  # Chop off ".gz"
+    else:
+        original_gtf_location = ref_gtf_gz["path"]
 
     added_genes_df = pd.read_csv(args.added_genes_config_file)
 
     print("Adding the following genes to the reference genome:")
     print(added_genes_df)
 
-    # new reference genome name
     new_reference_name = args.output_genome_name + ".fa"
-    # new gtf file name
     new_gtf_name = args.output_genome_name + ".gtf"
 
     arguments_fa = ["cat", original_reference_location]
@@ -77,6 +82,7 @@ def create_custom_reference(args):
             gtf_filename=added_genes_df["gtf_file"][i],
             chromosome=added_genes_df["chromosome"][i],
             edited_folder=EDITED_HUMAN_FILES_LOCATION,
+            scramble_genome=args.scramble_genome,
         )
 
         arguments_fa = arguments_fa + [edited_fa_filename]
@@ -117,7 +123,7 @@ def create_custom_reference(args):
         lambda row: row[0] if len(row) > 0 else ""
     )
     id_map = id_map.drop_duplicates()
-    
+
     symbol_map_filename = args.output_genome_name + "_symbol_map.csv"
     id_map.to_csv(symbol_map_filename, index=False)
 
@@ -135,7 +141,9 @@ def create_custom_reference(args):
     )
 
 
-def modify_human_sequence(fa_filename, gtf_filename, chromosome, edited_folder):
+def modify_human_sequence(
+    fa_filename, gtf_filename, chromosome, edited_folder, scramble_genome
+):
     gtf_df = pd.read_table(gtf_filename, sep="\t", header=None)
     gtf_df[0] = chromosome
 
@@ -154,7 +162,7 @@ def modify_human_sequence(fa_filename, gtf_filename, chromosome, edited_folder):
     gtf_df[4] = gtf_df[4] - orig_start_pos + 1
 
     # For benchmarking purposes only
-    if args.scramble_genome:
+    if scramble_genome:
         fasta_string = list("".join(fasta_lines[1:]).replace("\n", ""))
 
         random.seed(chromosome)
@@ -163,7 +171,7 @@ def modify_human_sequence(fa_filename, gtf_filename, chromosome, edited_folder):
         # Split back into lines of length 60 (as in original fasta file) and re-add \n characters to each line
         fasta_list = textwrap.wrap("".join(fasta_string), width=60)
         fasta_list = [line + "\n" for line in fasta_list]
-    # Normal non-benchmarking case    
+    # Normal non-benchmarking case
     else:
         fasta_list = fasta_lines[1:]
 
