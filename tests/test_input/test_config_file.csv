@@ -1,3 +1,0 @@
-gene_symbol,fasta_file,gtf_file,chromosome
-TEST1,tests/test_input/test_gene.fa,tests/test_input/test_gene.gtf,25
-TEST2,tests/test_input/test_gene2.fa,tests/test_input/test_gene2.gtf,20

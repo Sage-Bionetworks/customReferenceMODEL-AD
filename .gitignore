@@ -3,6 +3,6 @@ __pycache__
 .pytest_cache
 tmp
 edited_human_genes
-references
+downloads
 .vscode
 *.gz

@@ -3,32 +3,16 @@ import csv, textwrap
 import synapseclient
 import pandas as pd
 
-""""
-# usage: python3 createCustomReference.py [--authToken ***]
-
-Human gene sequences were downloaded from Ensembl (GRCh38.112) as fasta files using the "Export Data" feature on each 
-gene page:
-    APOE - https://useast.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=ENSG00000130203;r=19:44905791-44909393
-    APP - https://useast.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=ENSG00000142192;r=21:25880535-26171128
-    MAPT - https://useast.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=ENSG00000186868;r=17:45894527-46028334
-    PSEN1 - https://useast.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=ENSG00000080815;r=14:73136418-73223691
-The output was "FASTA Sequence", the strand was "Forward strand", and we de-selected all options under "Options for 
-FASTA sequence". All other fields were left as default.
-
-Annotations for human genes were downloaded as a GTF file from Ensembl (GRCh38.112) from
-https://ftp.ensembl.org/pub/release-112/gtf/homo_sapiens/Homo_sapiens.GRCh38.112.gtf.gz and the annotations for APOE, 
-APP, MAPT, and PSEN1 were extracted into separate files using the command line:
-    cat Homo_sapiens.GRCh38.112.gtf | grep ENSG00000130203 > APOE_human.gtf
-replacing the Ensembl ID and filename for each gene.
-
-The base mouse genome fasta and GTF files were downloaded from Ensembl (GRCm39.112) from
-https://ftp.ensembl.org/pub/release-112/fasta/mus_musculus/dna/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz
-and https://ftp.ensembl.org/pub/release-112/gtf/mus_musculus/Mus_musculus.GRCm39.112.gtf.gz, and put on Synapse at 
-syn61779422 and syn61779397 for re-use.
+"""
+Creates a custom reference genome for MODEL-AD RNA seq data. The Mus musculus genome (Ensembl GRCm39.112)
+is used as a base, and the sequences and GTF information of human genes are concatenated onto the base
+genome to account for mice with human transgenes. The added_genes_config.csv file defines which human
+genes are added. Currently, this script is set up to add human APOE, APP, MAPT, and PSEN1.
+See the README for usage.
 """
 
 # Constants - folders within this project folder where temporary files will be stored
-MM_BASE_REFERENCE_FOLDER = "references"
+SYN_DOWNLOADS_FOLDER = "downloads"
 EDITED_HUMAN_FILES_LOCATION = "edited_human_genes"
 
 # Constants - defaults for command-line arguments
@@ -41,7 +25,7 @@ DEFAULT_OUTPUT_GENOME_NAME = "universal_MODEL_AD_reference"
 
 
 def create_custom_reference(args):
-    os.makedirs(MM_BASE_REFERENCE_FOLDER, exist_ok=True)
+    os.makedirs(SYN_DOWNLOADS_FOLDER, exist_ok=True)
     os.makedirs(EDITED_HUMAN_FILES_LOCATION, exist_ok=True)
 
     # Download mouse genome reference from Synapse
@@ -50,15 +34,23 @@ def create_custom_reference(args):
 
     print("Downloading reference FASTA and GTF files...")
     ref_fasta_gz = syn.get(
-        args.base_fasta_synid, downloadLocation=MM_BASE_REFERENCE_FOLDER
+        args.base_fasta_synid,
+        downloadLocation=SYN_DOWNLOADS_FOLDER,
+        ifcollision="overwrite.local",
     )
+
     if ref_fasta_gz["path"].endswith(".gz"):
         subprocess.run("gunzip --keep --force " + ref_fasta_gz["path"], shell=True)
         original_reference_location = ref_fasta_gz["path"][:-3]  # Chop off ".gz"
     else:
         original_reference_location = ref_fasta_gz["path"]
 
-    ref_gtf_gz = syn.get(args.base_gtf_synid, downloadLocation=MM_BASE_REFERENCE_FOLDER)
+    ref_gtf_gz = syn.get(
+        args.base_gtf_synid,
+        downloadLocation=SYN_DOWNLOADS_FOLDER,
+        ifcollision="overwrite.local",
+    )
+
     if ref_gtf_gz["path"].endswith(".gz"):
         subprocess.run("gunzip --keep --force " + ref_gtf_gz["path"], shell=True)
         original_gtf_location = ref_gtf_gz["path"][:-3]  # Chop off ".gz"
@@ -78,8 +70,9 @@ def create_custom_reference(args):
 
     for i in range(0, added_genes_df.shape[0]):
         (edited_fa_filename, edited_gtf_filename) = modify_human_sequence(
-            fa_filename=added_genes_df["fasta_file"][i],
-            gtf_filename=added_genes_df["gtf_file"][i],
+            syn=syn,
+            fa_synid=added_genes_df["fasta_synid"][i],
+            gtf_synid=added_genes_df["gtf_synid"][i],
             chromosome=added_genes_df["chromosome"][i],
             edited_folder=EDITED_HUMAN_FILES_LOCATION,
             scramble_genome=args.scramble_genome,
@@ -135,19 +128,26 @@ def create_custom_reference(args):
 
     print(
         "Completed reference files:\n"
-        + "\tReference FASTA: " + new_reference_name + ".gz\n" 
-        + "\tReference GTF:   " + new_gtf_name + ".gz\n" 
-        + "\tSymbol map:      " + symbol_map_filename
+        + f"\tReference FASTA: {new_reference_name}.gz\n"
+        + f"\tReference GTF:   {new_gtf_name}.gz\n"
+        + f"\tSymbol map:      {symbol_map_filename}"
     )
 
 
 def modify_human_sequence(
-    fa_filename, gtf_filename, chromosome, edited_folder, scramble_genome
+    syn, fa_synid, gtf_synid, chromosome, edited_folder, scramble_genome
 ):
-    gtf_df = pd.read_table(gtf_filename, sep="\t", header=None)
+    fa_file = syn.get(
+        fa_synid, downloadLocation=SYN_DOWNLOADS_FOLDER, ifcollision="overwrite.local"
+    )
+    gtf_file = syn.get(
+        gtf_synid, downloadLocation=SYN_DOWNLOADS_FOLDER, ifcollision="overwrite.local"
+    )
+
+    gtf_df = pd.read_table(gtf_file.path, sep="\t", header=None)
     gtf_df[0] = chromosome
 
-    with open(fa_filename, "r") as old_fasta:
+    with open(fa_file.path, "r") as old_fasta:
         fasta_lines = old_fasta.readlines()
 
         fasta_fields = fasta_lines[0].split(":")
@@ -177,8 +177,8 @@ def modify_human_sequence(
 
     fasta_list = [":".join(fasta_fields)] + fasta_list
 
-    edited_fa_filename = os.path.join(edited_folder, os.path.basename(fa_filename))
-    edited_gtf_filename = os.path.join(edited_folder, os.path.basename(gtf_filename))
+    edited_fa_filename = os.path.join(edited_folder, os.path.basename(fa_file.path))
+    edited_gtf_filename = os.path.join(edited_folder, os.path.basename(gtf_file.path))
 
     with open(edited_fa_filename, "w") as new_fasta:
         new_fasta.writelines(fasta_list)
