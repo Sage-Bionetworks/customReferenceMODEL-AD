@@ -1,4 +1,4 @@
 synapseclient
-biopython
 argparse
 pandas
+pytest

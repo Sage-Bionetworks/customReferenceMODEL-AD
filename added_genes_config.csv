@@ -1,0 +1,5 @@
+gene_symbol,fasta_synid,gtf_synid,chromosome
+APOE,syn64416699,syn64416700,20
+APP,syn64416704,syn64416703,21
+MAPT,syn64416702,syn64416705,22
+PSEN1,syn64416701,syn64416706,23
