@@ -33,10 +33,10 @@ and put on Synapse at
 
 Human gene sequences were downloaded from Ensembl (GRCh38.112) as fasta files using the "Export Data" feature on each 
 gene page:
-* APOE - https://useast.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=ENSG00000130203;r=19:44905791-44909393
-* APP - https://useast.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=ENSG00000142192;r=21:25880535-26171128
-* MAPT - https://useast.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=ENSG00000186868;r=17:45894527-46028334
-* PSEN1 - https://useast.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=ENSG00000080815;r=14:73136418-73223691
+* APOE - https://may2024.archive.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000130203&db=core
+* APP - https://may2024.archive.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000142192&db=core
+* MAPT - https://may2024.archive.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000186868&db=core
+* PSEN1 - https://may2024.archive.ensembl.org/homo_sapiens/Gene/Summary?g=ENSG00000080815&db=core
 
 The output was "FASTA Sequence", the strand was "Forward strand", and we de-selected all options under "Options for 
 FASTA sequence". All other fields were left as default.
