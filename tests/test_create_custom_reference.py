@@ -1,5 +1,4 @@
 import os, argparse, shutil
-import pandas as pd
 from unittest.mock import patch
 from io import StringIO
 import pytest
@@ -52,7 +51,8 @@ class TestCreateCustomReference:
         self.args.added_genes_config_file = StringIO(self.genes_config_string)
         self.args.base_fasta_synid = REFERENCE_FA
         self.args.base_gtf_synid = REFERENCE_GTF
-        self.args.output_genome_name = os.path.join(TMP_FOLDER, "test_genome")
+        self.args.output_genome_name = "test_genome"
+        self.args.output_folder_path = TMP_FOLDER
         self.args.authToken = "token123"
         self.args.scramble_genome = False
 
@@ -69,7 +69,7 @@ class TestCreateCustomReference:
     def test_create_custom_reference(self):
         createCustomReference.create_custom_reference(self.args)
 
-        with open(self.args.output_genome_name + ".fa", "r") as fa_file:
+        with open(os.path.join(self.args.output_folder_path, self.args.output_genome_name + ".fa"), "r") as fa_file:
             output_genome_fa = fa_file.read()
 
         with open(
@@ -77,7 +77,7 @@ class TestCreateCustomReference:
         ) as fa_file:
             true_genome_fa = fa_file.read()
 
-        with open(self.args.output_genome_name + ".gtf", "r") as gtf_file:
+        with open(os.path.join(self.args.output_folder_path, self.args.output_genome_name + ".gtf"), "r") as gtf_file:
             output_genome_gtf = gtf_file.read()
 
         with open(

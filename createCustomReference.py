@@ -20,13 +20,12 @@ MM_BASE_FASTA_SYNID = "syn61779422"
 MM_BASE_GTF_SYNID = "syn61779397"
 ADDED_GENES_CONFIG_FILE = "added_genes_config.csv"
 DEFAULT_OUTPUT_GENOME_NAME = "universal_MODEL_AD_reference"
-
-# TODO ensure human gene fasta/gtf files end in \n before concatenation
-
+DEFAULT_OUTPUT_LOCATION = "output"
 
 def create_custom_reference(args):
     os.makedirs(SYN_DOWNLOADS_FOLDER, exist_ok=True)
     os.makedirs(EDITED_HUMAN_FILES_LOCATION, exist_ok=True)
+    os.makedirs(args.output_folder_path, exist_ok=True)
 
     # Download mouse genome reference from Synapse
     syn = synapseclient.Synapse()
@@ -62,8 +61,8 @@ def create_custom_reference(args):
     print("Adding the following genes to the reference genome:")
     print(added_genes_df)
 
-    new_reference_name = args.output_genome_name + ".fa"
-    new_gtf_name = args.output_genome_name + ".gtf"
+    new_reference_name = os.path.join(args.output_folder_path, args.output_genome_name + ".fa")
+    new_gtf_name = os.path.join(args.output_folder_path, args.output_genome_name + ".gtf")
 
     arguments_fa = ["cat", original_reference_location]
     arguments_gtf = ["cat", original_gtf_location]
@@ -117,7 +116,7 @@ def create_custom_reference(args):
     )
     id_map = id_map.drop_duplicates()
 
-    symbol_map_filename = args.output_genome_name + "_symbol_map.csv"
+    symbol_map_filename = os.path.join(args.output_folder_path, args.output_genome_name + "_symbol_map.csv")
     id_map.to_csv(symbol_map_filename, index=False)
 
     print("gzipping fasta file...")
@@ -177,6 +176,10 @@ def modify_human_sequence(
 
     fasta_list = [":".join(fasta_fields)] + fasta_list
 
+    # Ensure the fasta file ends with an end-of-line character
+    if (fasta_list[-1][-1] != "\n"):
+        fasta_list[-1] = fasta_list[-1] + "\n"
+
     edited_fa_filename = os.path.join(edited_folder, os.path.basename(fa_file.path))
     edited_gtf_filename = os.path.join(edited_folder, os.path.basename(gtf_file.path))
 
@@ -226,6 +229,14 @@ def get_input_args():
         metavar="NAME",
         default=DEFAULT_OUTPUT_GENOME_NAME,
         help="Name of the output genome (without any file extension)",
+    )
+    parser.add_argument(
+        "-p",
+        "--output_folder_path",
+        required=False,
+        metavar="FOLDER",
+        default=DEFAULT_OUTPUT_LOCATION,
+        help="Path (local or absolute) of the folder where the .fa and .gtf files should be output",
     )
     parser.add_argument(
         "-s",
