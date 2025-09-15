@@ -2,8 +2,8 @@
 
 This repository provides code to concatenate human genes onto the mouse reference genome (GRCm39.112) to create a
 custom genome reference that can be used for all MODEL-AD models. This allows for RNA sequencing alignment to human
-genes for mice with transgenes. By default, the human genes APOE, APP, MAPT, and PSEN1 are added to the mouse reference
-by this script.
+genes for mice with transgenes. By default, the human genes APOE, APP, CLU, MAPT, and PSEN1 are added to the mouse
+reference by this script.
 
 # Running the script
 
@@ -35,6 +35,7 @@ Human gene sequences were downloaded from Ensembl (GRCh38.112) as fasta files us
 gene page:
 * APOE - https://may2024.archive.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000130203&db=core
 * APP - https://may2024.archive.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000142192&db=core
+* CLU - https://may2024.archive.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000120885&db=core
 * MAPT - https://may2024.archive.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000186868&db=core
 * PSEN1 - https://may2024.archive.ensembl.org/homo_sapiens/Gene/Summary?g=ENSG00000080815&db=core
 
@@ -42,7 +43,7 @@ The output was "FASTA Sequence", the strand was "Forward strand", and we de-sele
 FASTA sequence". All other fields were left as default.
 
 Annotations for human genes were downloaded as a GTF file from Ensembl (GRCh38.112) ([Homo_sapiens.GRCh38.112.gtf.gz](https://ftp.ensembl.org/pub/release-112/gtf/homo_sapiens/Homo_sapiens.GRCh38.112.gtf.gz)) and the annotations for APOE, 
-APP, MAPT, and PSEN1 were extracted into separate files using the command line:
+APP, CLU, MAPT, and PSEN1 were extracted into separate files using the command line:
 ```
 cat Homo_sapiens.GRCh38.112.gtf | grep ENSG00000130203 > APOE_human.gtf
 ```
