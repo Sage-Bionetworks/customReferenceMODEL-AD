@@ -31,13 +31,13 @@ and put on Synapse at
 
 ## Human reference sequences
 
-Human gene sequences were downloaded from Ensembl (GRCh38.112) as fasta files using the "Export Data" feature on each 
+Human gene sequences were downloaded from Ensembl (GRCh38.112) ([archive](https://may2024.archive.ensembl.org/)) as fasta files using the "Export Data" feature on each 
 gene page:
-* APOE - https://may2024.archive.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000130203&db=core
-* APP - https://may2024.archive.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000142192&db=core
-* CLU - https://may2024.archive.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000120885&db=core
-* MAPT - https://may2024.archive.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000186868&db=core
-* PSEN1 - https://may2024.archive.ensembl.org/homo_sapiens/Gene/Summary?g=ENSG00000080815&db=core
+* APOE - [ENSG00000130203](https://may2024.archive.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000130203&db=core)
+* APP - [ENSG00000142192](https://may2024.archive.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000142192&db=core)
+* CLU - [ENSG00000120885](https://may2024.archive.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000120885&db=core)
+* MAPT - [ENSG00000186868](https://may2024.archive.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG00000186868&db=core)
+* PSEN1 - [ENSG00000080815](https://may2024.archive.ensembl.org/homo_sapiens/Gene/Summary?g=ENSG00000080815&db=core)
 
 The output was "FASTA Sequence", the strand was "Forward strand", and we de-selected all options under "Options for 
 FASTA sequence". All other fields were left as default.
