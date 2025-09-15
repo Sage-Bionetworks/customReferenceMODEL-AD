@@ -4,5 +4,6 @@ __pycache__
 tmp
 edited_human_genes
 downloads
+output
 .vscode
 *.gz
