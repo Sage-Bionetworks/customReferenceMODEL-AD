@@ -69,20 +69,20 @@ class TestCreateCustomReference:
     def test_create_custom_reference(self):
         createCustomReference.create_custom_reference(self.args)
 
-        with open(os.path.join(self.args.output_folder_path, self.args.output_genome_name + ".fa"), "r") as fa_file:
+        output_genome = os.path.join(
+            self.args.output_folder_path, self.args.output_genome_name
+        )
+        expected_output = os.path.join("tests", "test_output", "test_reference_output")
+        with open(output_genome + ".fa", "r") as fa_file:
             output_genome_fa = fa_file.read()
 
-        with open(
-            os.path.join("tests", "test_output", "test_reference_output.fa"), "r"
-        ) as fa_file:
+        with open(expected_output + ".fa", "r") as fa_file:
             true_genome_fa = fa_file.read()
 
-        with open(os.path.join(self.args.output_folder_path, self.args.output_genome_name + ".gtf"), "r") as gtf_file:
+        with open(output_genome + ".gtf", "r") as gtf_file:
             output_genome_gtf = gtf_file.read()
 
-        with open(
-            os.path.join("tests", "test_output", "test_reference_output.gtf"), "r"
-        ) as gtf_file:
+        with open(expected_output + ".gtf", "r") as gtf_file:
             true_genome_gtf = gtf_file.read()
 
         assert output_genome_fa == true_genome_fa
