@@ -7,7 +7,7 @@ import pandas as pd
 Creates a custom reference genome for MODEL-AD RNA seq data. The Mus musculus genome (Ensembl GRCm39.112)
 is used as a base, and the sequences and GTF information of human genes are concatenated onto the base
 genome to account for mice with human transgenes. The added_genes_config.csv file defines which human
-genes are added. Currently, this script is set up to add human APOE, APP, MAPT, and PSEN1.
+genes are added. Currently, this script is set up to add human APOE, APP, CLU, MAPT, and PSEN1.
 See the README for usage.
 """
 
